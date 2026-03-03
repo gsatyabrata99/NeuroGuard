@@ -230,7 +230,7 @@ Every record is tagged with its source system, transformation steps, and destina
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/NeuroGuard.git
+git clone https://github.com/gsatyabrata99/NeuroGuard.git
 cd NeuroGuard
 
 # Create virtual environment
