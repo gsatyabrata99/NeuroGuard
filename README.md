@@ -13,7 +13,7 @@
 
 ## Overview
 
-NeuroGuard is a prototype clinical data management system designed for a brain tumor specialty clinic. It integrates a full data pipeline, enterprise-grade data governance, PHI-compliant architecture, and an AI-assisted MRI tumor detection model — built as a capstone project demonstrating end-to-end big data analytics in a healthcare context.
+NeuroGuard is a prototype clinical data management system designed for a brain tumor specialty clinic. It integrates a full data pipeline, enterprise-grade data governance, PHI-compliant architecture, and an AI-assisted MRI tumor detection model — built as a project for AI for Data Driven Experience demonstrating end-to-end big data analytics in a healthcare context.
 
 **This is a prototype for academic purposes. Not intended for clinical use.**
 
