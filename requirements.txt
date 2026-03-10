@@ -1,0 +1,37 @@
+# NeuroGuard — Python Dependencies
+# CIS 8395 | Georgia State University | Spring 2026
+# Python 3.10+
+#
+# Install: pip install -r requirements.txt
+
+# ── Core data ────────────────────────────────────────────────────────────────
+pandas>=2.0.0
+numpy>=1.24.0
+
+# ── Database ─────────────────────────────────────────────────────────────────
+psycopg2-binary>=2.9.0
+
+# ── ETL / Data generation ────────────────────────────────────────────────────
+faker>=19.0.0
+python-dotenv>=1.0.0
+
+# ── FHIR ─────────────────────────────────────────────────────────────────────
+fhir.resources>=7.0.0
+
+# ── Dashboard ────────────────────────────────────────────────────────────────
+streamlit>=1.32.0
+plotly>=5.18.0
+
+# ── ML / CNN (teammates' modules — needed for inference in dashboard) ────────
+torch>=2.0.0
+torchvision>=0.15.0
+pytorch-grad-cam>=1.4.0
+scikit-learn>=1.3.0
+xgboost>=2.0.0
+
+# ── Image processing ─────────────────────────────────────────────────────────
+Pillow>=10.0.0
+opencv-python-headless>=4.8.0
+
+# ── Utilities ────────────────────────────────────────────────────────────────
+python-dateutil>=2.8.0
