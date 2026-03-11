@@ -204,7 +204,7 @@ def show_analytics(user: dict):
 
     conn = get_conn()
 
-    tab1, tab2, tab3 = st.tabs(["📊 Descriptive", "🔍 Diagnostic", "📈 Predictive"])
+    tab1, tab2, tab3, tab4 = st.tabs(["📊 Descriptive", "🔍 Diagnostic", "📈 Predictive", "🤖 Ask AI"])
 
     # ── Tab 1: Descriptive ────────────────────────────────────────────────────
     with tab1:
@@ -412,5 +412,10 @@ def show_analytics(user: dict):
                          labels={"age_group": "Age Group", "cnt": "Count", "urgency_level": "Urgency"})
             fig.update_layout(paper_bgcolor="#1e2130", plot_bgcolor="#1e2130", font_color="#e2e8f0")
             st.plotly_chart(fig, use_container_width=True)
+
+    # ── Tab 4: Ask AI ─────────────────────────────────────────────────────────
+    with tab4:
+        from views.nl_analytics import show_nl_analytics
+        show_nl_analytics(user)
 
     conn.close()
