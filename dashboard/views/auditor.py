@@ -105,7 +105,7 @@ def _show_event_log():
                     al.log_id,
                     al.logged_at,
                     COALESCE(u.username, 'system') AS username,
-                    COALESCE(u.role, '—') AS role,
+                    COALESCE(u.role::text, 'system') AS role,
                     al.action,
                     al.resource_type,
                     al.resource_id,
@@ -279,7 +279,7 @@ def _show_export(user: dict):
                            al.phi_sensitivity, al.ip_address,
                            al.detail,
                            COALESCE(u.username, 'system') AS username,
-                           COALESCE(u.role, '—') AS role
+                           COALESCE(u.role::text, 'system') AS role
                     FROM audit_log al
                     LEFT JOIN users u ON al.user_id = u.user_id
                     WHERE al.logged_at BETWEEN %s AND %s

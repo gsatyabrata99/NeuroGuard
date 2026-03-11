@@ -128,6 +128,19 @@ EXAMPLE_QUERIES = [
 # SQL SAFETY GUARD
 # =============================================================================
 
+
+def _fix_sql(sql: str) -> str:
+    """Auto-fix common PostgreSQL type casting issues in LLM-generated SQL."""
+    import re
+    # ROUND(expr, n) needs numeric cast: ROUND(expr::numeric, n)
+    sql = re.sub(
+        r'ROUND\(([^,]+),\s*(\d+)\)',
+        lambda m: f'ROUND(({m.group(1)})::numeric, {m.group(2)})',
+        sql
+    )
+    return sql
+
+
 def _is_safe_query(sql: str) -> tuple[bool, str]:
     """
     Validates that the generated SQL is a safe SELECT-only query
@@ -167,41 +180,24 @@ def _call_claude(natural_language: str) -> str:
     Calls Claude API to translate natural language to SQL.
     Returns raw SQL string.
     """
-    import urllib.request
+    import anthropic
 
-    payload = json.dumps({
-        "model": "claude-sonnet-4-20250514",
-        "max_tokens": 1000,
-        "system": SCHEMA_CONTEXT,
-        "messages": [
+    client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+    message = client.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=1000,
+        system=SCHEMA_CONTEXT,
+        messages=[
             {"role": "user", "content": natural_language}
         ]
-    }).encode()
-
-    req = urllib.request.Request(
-        "https://api.anthropic.com/v1/messages",
-        data=payload,
-        headers={
-            "Content-Type": "application/json",
-            "anthropic-version": "2023-06-01",
-        },
-        method="POST"
     )
 
-    with urllib.request.urlopen(req) as response:
-        data = json.loads(response.read())
-
-    # Extract text content
-    for block in data.get("content", []):
-        if block.get("type") == "text":
-            sql = block["text"].strip()
-            # Strip markdown fences if model added them anyway
-            sql = re.sub(r"^```sql\s*", "", sql, flags=re.IGNORECASE)
-            sql = re.sub(r"^```\s*", "", sql)
-            sql = re.sub(r"\s*```$", "", sql)
-            return sql.strip()
-
-    raise ValueError("No text content returned from Claude API")
+    sql = message.content[0].text.strip()
+    # Strip markdown fences if model added them
+    sql = re.sub(r"^```sql\s*", "", sql, flags=re.IGNORECASE)
+    sql = re.sub(r"^```\s*", "", sql)
+    sql = re.sub(r"\s*```$", "", sql)
+    return sql.strip()
 
 
 # =============================================================================
@@ -269,6 +265,9 @@ def show_nl_analytics(user: dict):
             return
 
     # ── Safety check ──────────────────────────────────────────────────────────
+    # Auto-fix common PostgreSQL type issues in generated SQL
+    sql = _fix_sql(sql)
+
     safe, reason = _is_safe_query(sql)
 
     st.markdown("**Generated SQL**")
